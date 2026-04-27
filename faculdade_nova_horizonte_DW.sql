@@ -121,7 +121,7 @@ JOIN dim_turma dt
         LIMIT 1
     )
 
-JOIN dim_tempo dtempo ON dtempo.data = m.data_matricula LEFT JOIN faculdade_nova_horizonte.tb_notas n ON n.fk_id_matricula = m.pk_id_matricula;
+JOIN dim_tempo dtempo ON dtempo.dia = m.data_matricula LEFT JOIN faculdade_nova_horizonte.tb_notas n ON n.fk_id_matricula = m.pk_id_matricula;
 
 INSERT INTO fato_financeiro (fk_aluno, fk_tempo, valor_pago, parcelas_pagas)
 SELECT
@@ -134,7 +134,7 @@ FROM faculdade_nova_horizonte.tb_contratos_educacionais c
 
 JOIN dim_aluno da ON da.nk_rgm = c.fk_rgm
 JOIN faculdade_nova_horizonte.tb_parcelas_contrato p ON p.fk_id_contrato = c.pk_id_contrato
-JOIN dim_tempo dt ON dt.data = p.data_vencimento
+JOIN dim_tempo dt ON dt.dia = p.data_vencimento
 GROUP BY da.sk_aluno, dt.sk_tempo;
 
 INSERT INTO fato_frequencia (fk_aluno, fk_disciplina, fk_tempo, total_faltas)
@@ -149,12 +149,12 @@ FROM faculdade_nova_horizonte.tb_faltas f
 JOIN faculdade_nova_horizonte.tb_matriculas m ON m.pk_id_matricula = f.fk_id_matricula
 JOIN dim_aluno da ON da.nk_rgm = m.fk_rgm
 JOIN dim_disciplina dd ON dd.nk_id_disciplina = m.fk_id_disciplina
-JOIN dim_tempo dt ON dt.data = f.data_registro;
+JOIN dim_tempo dt ON dt.dia = f.data_registro;
 
 UPDATE fato_desempenho
-SET status_aprovacao =
+SET aprovacao =
     CASE
-        WHEN nota_final >= 6 THEN 'APROVADO'
+        WHEN nota_af >= 6 THEN 'APROVADO'
         ELSE 'REPROVADO'
     END;
 
@@ -169,12 +169,3 @@ SELECT d.nome_disciplina, SUM(f.total_faltas) AS faltas FROM fato_frequencia f J
 GROUP BY d.nome_disciplina;
 -- Alunos reprovados
 SELECT * FROM fato_desempenho WHERE status_aprovacao = 'REPROVADO';
-
-describe dim_disciplina;
-describe dim_aluno;
-describe dim_funcionario;
-describe dim_turma;
-describe dim_tempo;
-describe fato_desempenho;
-describe fato_financeiro;
-describe fato_frequencia;

@@ -121,6 +121,7 @@ CREATE TABLE tb_professores(
     titulacao VARCHAR(50),
     area_atuacao VARCHAR(100),
     FOREIGN KEY (fk_id_funcionario) REFERENCES tb_funcionarios(pk_id_funcionario)
+<<<<<<< HEAD
 );
 
 ALTER TABLE tb_alunos
@@ -130,3 +131,6 @@ ALTER TABLE tb_funcionarios
 ADD sexo CHAR(1);
 
 describe tb_funcionarios;
+=======
+);
+>>>>>>> 00865134a3692123d705e4c442e360d78acdb0f6
